@@ -8,7 +8,7 @@ function LandingPage(props) {
       console.log("response.data : ", response.data);
       if (response.data.success) {
         alert("로그아웃에 성공했습니다.");
-        props.history.push("/login");
+        props.history.push("/");
       } else {
         alert("로그아웃 하는데 실패 했습니다.");
       }
