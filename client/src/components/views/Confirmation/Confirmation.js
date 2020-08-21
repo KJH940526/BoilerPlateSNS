@@ -4,13 +4,6 @@ import { withRouter} from 'react-router-dom'
 
 function Confirmation(props) {
 
-  useEffect(() => {
-    // const getConfirmation = ()=>{
-    //   axios.get(`/api/users/getConfirmation`);
-    // };
-    // getConfirmation()
-    // alert("인증에 성공하였습니다.")
-  },[]);
 
   useEffect(() => {
     axios.get(`/api/users/getConfirmation`)
