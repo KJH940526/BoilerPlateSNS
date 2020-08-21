@@ -30,10 +30,12 @@ function MyPage(props) {
     let body = {
       password: Password,
     };  
-    //ConfirmPassword는 데이터베이스로 보내지 않기 때문에 body x
+    // ConfirmPassword는 데이터베이스로 보내지 않기 때문에 body x
 
-    // axios.post('/api/users/modify',body)
-    // .then(response => console.log("mypage",response.data.user))
+    axios.post('/api/users/modify',body)
+    .then(response => console.log("mypage",response.data.user))
+    alert("회원정보가 수정되었습니다.");
+    props.history.push("/");
   };
   
 

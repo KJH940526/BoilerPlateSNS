@@ -11,7 +11,7 @@ import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'
 
 //- 추가한거
-// import MyPage from './components/views/MyPage/MyPage';
+import MyPage from './components/views/MyPage/MyPage';
 import Confirmation from './components/views/Confirmation/Confirmation'
 import NotConfirmation from './components/views/NotConfirmation/NotConfirmation';
 
@@ -33,7 +33,7 @@ function App() {
           <Route exact path="/register" component={Auth(RegisterPage,false)} />
 
 
-          {/* <Route exact path="/mypage" component={Auth(MyPage,true)} /> */}
+          <Route exact path="/mypage" component={Auth(MyPage,true)} />
 
           <Route path="/confirmation" component={Auth(Confirmation,true)} />
 

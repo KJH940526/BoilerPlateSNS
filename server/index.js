@@ -178,25 +178,25 @@ app.get("/api/users/resend", auth, (req, res) => {
   });
 });
 
-// app.post("/api/users/modify", auth, (req, res)=>{
-//   console.log("auth 모디파이", req.user)
-//   console.log("req.body 모디파이", req.body.password)
-//   User.findOne({ _id: req.user.id }, (err, user) => {
-//     console.log("파인드원",user)
-//   if (err) return res.json({ success: false, err });
-//   User.updateOne(
-//     {_id: user._id},
-//     { password: user.password},
-//     (err,user)=>{
-//       if(err) return res.json({success: false, err})
-//       return res.status(200).send({
-//         success:true,
-//         user : user
-//         })
-//       }
-//     )
-//   })
-// })
+app.post("/api/users/modify", auth, (req, res)=>{
+  console.log("auth 모디파이", req.user)
+  console.log("req.body 모디파이", req.body.password)
+  User.findOne({ _id: req.user.id }, (err, user) => {
+    console.log("파인드원",user)
+  if (err) return res.json({ success: false, err });
+  User.updateOne(
+    {_id: user._id},
+    { password: req.body.password},
+    (err,user)=>{
+      if(err) return res.json({success: false, err})
+      return res.status(200).send({
+        success:true,
+        user : user
+        })
+      }
+    )
+  })
+})
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);

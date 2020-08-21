@@ -23,9 +23,9 @@ function LandingPage(props) {
     props.history.push("/register");
   };
 
-  // const onMyPage = () => {
-  //   props.history.push("/mypage");
-  // };
+  const onMyPage = () => {
+    props.history.push("/mypage");
+  };
 
   return (
     <div
@@ -42,7 +42,7 @@ function LandingPage(props) {
         <button onClick={onRegister}>회원가입</button> <br />
         <button onClick={onLogin}>로그인</button> <br />
         <button onClick={onClickHandler}> 로그아웃 </button> <br />
-        {/* <button onClick={onMyPage}> 회원수정 </button> */}
+        <button onClick={onMyPage}> 회원수정 </button>
       </span>
     </div>
   );

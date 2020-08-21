@@ -65,6 +65,7 @@ userSchema.pre("save", function (next) {
 userSchema.pre("updateOne", function (next) {
   let user = this; //arrow function 대신 function을 사용한 이유
   console.log("updateOne pre에 들어왔어요");
+  console.log(user._update);
   console.log("user.js", user._update.password);
   if (user._update.password) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
