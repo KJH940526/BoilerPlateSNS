@@ -8,15 +8,18 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     maxlength: 50,
+    required: true
   },
   email: {
     type: String,
     trim: true,
     unique: true,
+    required: true
   },
   password: {
     type: String,
     minLength: 5,
+    required: true
   },
   lastname: {
     type: String,
@@ -28,6 +31,8 @@ const userSchema = mongoose.Schema({
   },
   image: {
     type: String,
+    required: true,
+    default: "https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1214428300"
   },
   token: {
     type: String,
