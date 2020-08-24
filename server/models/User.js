@@ -83,9 +83,7 @@ userSchema.pre("updateOne", function (next) {
         console.log(hash);
         next();
       });
-    });       
-  } else if(user._update.$set.name){  //이름 바꿀때
-    next();       
+    });             
   } else if(user._update.$set.image){ //이미지를 바꿀떄
     next();
   }

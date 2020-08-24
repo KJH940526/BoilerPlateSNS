@@ -13,23 +13,22 @@ function MyPage(props) {
   const [currentImage, setCurrentImage] = useState("");
   const [UpdateName, setUpdateName] = useState("");
 
-  const [id,setId] = useState("")
 
   useEffect(() => {
     axios.get("api/users/auth").then((response) => {
       console.log("MyPage라고 말해주세요", response.data);
         if(response.data.isAuth){
           console.log("response.data에 들어옴")
-          setId(response.data.id)
           setCurrentName(response.data.name)
           setCurrentImage(response.data.image)
-          // setcurrentPassword(response.data.password)
+          setcurrentPassword(response.data.password) //?
+
           console.log(response.data)
           console.log("커런트네임", currentName)   //?
           console.log("커런트이미지", currentImage) //?
+          console.log("커런트 비밀번호",currentPassword) //?
         } else {
           alert("유저정보를 가져오는데 실패했습니다.")
-          props.history.push("/");
         }
     });
   }, []);
@@ -57,8 +56,7 @@ function MyPage(props) {
     }
     let body = {
       name: UpdateName !== "" ? UpdateName : currentName,
-      // password: Password !=="" ? Password : currentPassword
-      password: Password
+      password: Password !== currentPassword ? Password : currentPassword
     };  
     // ConfirmPassword는 데이터베이스로 보내지 않기 때문에 body x
     

@@ -117,7 +117,7 @@ app.get("/api/users/auth", auth, (req, res) => {
 
      //password를 받는 이유는 비밀번호 수정할떄 쓰기위해서?
     //아니면 전체를 가져오는 다른 axios 요청을 가지고 클라이언트에 보내야함
-    // password : req.user.password,
+    password : req.user.password,
     isVerified: req.user.isVerified,
   })
 });
