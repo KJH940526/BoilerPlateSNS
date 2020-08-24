@@ -32,6 +32,7 @@ mongoose
   .then(() => console.log("몽고DB 연결중..."))
   .catch((err) => console.log(err));
 
+//여기서 아이디 중복시 json을 리턴해주어서 분기처리해줘야한다.
 app.post("/api/users/register", (req, res) => {
   console.log("reg",req.body)
   const user = new User(req.body);
@@ -39,13 +40,13 @@ app.post("/api/users/register", (req, res) => {
     if (err) return res.json({ success: false, err });
     return res.status(200).json({
       success: true,
+      userInfo
     });
   });
 });
 
 app.post("/api/users/login", (req, res) => {
   console.log("login",req.body)
-  console.log("login",req.user)
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
       return res.json({
@@ -67,6 +68,7 @@ app.post("/api/users/login", (req, res) => {
           .json({ loginSuccess: true, userId: user._id });
       });
     });
+
     if (!user.isVerified) {
       const Verifiedtoken = jwt.sign(user._id.toHexString(), "registerToken");
       // console.log()
@@ -101,22 +103,6 @@ app.post("/api/users/login", (req, res) => {
   });
 });
 
-// app.get("/api/users/auth", auth, (req, res) => {
-//   // console.log("auth index",req.user)
-//   res.status(200).json({
-//     _id: req.user._id,
-//     isAdmin: req.user.role === 0 ? false : true,
-//     isAuth: true,
-//     email: req.user.email,
-//     name: req.user.name,
-//     lastname: req.user.lastname,
-//     role: req.user.role,
-//     image: req.user.image,
-
-//     isVerified: req.user.isVerified,
-//   })
-// });
-
 app.get("/api/users/auth", auth, (req, res) => {
   // console.log("auth index",req.user)
   res.status(200).json({
@@ -124,14 +110,14 @@ app.get("/api/users/auth", auth, (req, res) => {
     isAdmin: req.user.role === 0 ? false : true,
     isAuth: true,
     email: req.user.email,
-    // password : req.user.password, 
-    //password를 받는 이유는 비밀번호 수정할떄 쓰기위해서?
-    //아니면 전체를 가져오는 다른 axios 요청을 가지고 클라이언트에 보내야함
     name: req.user.name,
     lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image,
 
+     //password를 받는 이유는 비밀번호 수정할떄 쓰기위해서?
+    //아니면 전체를 가져오는 다른 axios 요청을 가지고 클라이언트에 보내야함
+    // password : req.user.password,
     isVerified: req.user.isVerified,
   })
 });
@@ -204,12 +190,20 @@ app.get("/api/users/resend", auth, (req, res) => {
   });
 });
 
+
+
+
+
 app.post("/api/users/modify", auth, (req, res)=>{
   console.log("auth 모디파이", req.user)
-  console.log("req.body 모디파이", req.body.password)
   User.findOne({ _id: req.user.id }, (err, user) => {
     console.log("파인드원",user)
   if (err) return res.json({ success: false, err });
+
+    console.log("user._id 아이디아이디", user._id)
+    console.log("req.user 유저유저",req.user)
+    console.log("req.body 바디바디",req.body)
+  
   User.updateOne(
     {_id: user._id},
     {//$set을 해야 해당 필드만 바뀝니다. https://www.zerocho.com/category/MongoDB/post/579e2821c097d015000404dc
@@ -221,7 +215,6 @@ app.post("/api/users/modify", auth, (req, res)=>{
     },
     (err,userInfo)=>{
       console.log("리턴 user",user);
-      // console.log("리턴 userInfo",userInfo);
       if(err) return res.json({success: false, err})
       return res.status(200).send({
         success:true,

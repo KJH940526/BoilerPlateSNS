@@ -8,13 +8,13 @@ const userSchema = mongoose.Schema({
   name: {
     type: String,
     maxlength: 50,
-    required: true
+    // required: true
   },
   email: {
     type: String,
     trim: true,
     unique: true,
-    required: true
+    // required: true
   },
   password: {
     type: String,
@@ -31,7 +31,7 @@ const userSchema = mongoose.Schema({
   },
   image: {
     type: String,
-    required: true,
+    // required: true,
     default: "https://media.istockphoto.com/vectors/default-profile-picture-avatar-photo-placeholder-vector-illustration-vector-id1214428300"
   },
   token: {
@@ -83,8 +83,10 @@ userSchema.pre("updateOne", function (next) {
         console.log(hash);
         next();
       });
-    });       //이미지를 바꿀떄
-  } else if(user._update.$set.image){
+    });       
+  } else if(user._update.$set.name){  //이름 바꿀때
+    next();       
+  } else if(user._update.$set.image){ //이미지를 바꿀떄
     next();
   }
 });
@@ -101,15 +103,20 @@ userSchema.methods.comparePassword = function (plainPassword, cb) {
 
 userSchema.methods.generateToken = function (cb) {
   var user = this; 
+
   console.log("5번 user._id: ", user._id);
   var token = jwt.sign(user._id.toHexString(), "secretToken");
+  
   user.token = token;
+  
   console.log("6번 유저토큰: ", user.token);
   console.log("7번 토큰: ", token);
+  
   user.save(function (err, user) {
-    console.log("8번 user정보: ", user._id);
-    if (err) return cb(err); 
-    cb(null, user); 
+    console.log("유저유저유저",err)
+    console.log("8번 user: ", user);
+    if (err) return cb(err);
+    cb(null, user);
   });
 };
 
