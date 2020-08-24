@@ -33,7 +33,7 @@ export function auth(){
   const request = axios
   .get("/api/users/auth")
   .then((response)=> response.data)
-  console.log('request: ',request)
+  // console.log('request: ',request)
   return {
     type: AUTH_USER,
     payload: request

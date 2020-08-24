@@ -7,7 +7,7 @@ import {
 
 export default function(state = {}, action){
 
-  console.log(state)
+  // console.log(state)
   console.log('types.js에서 넣음 =', action.type)
   switch(action.type){
     case LOGIN_USER:
@@ -23,6 +23,8 @@ export default function(state = {}, action){
       break;   
 
     case AUTH_USER:
+      console.log('case가 AUTH_USER =',AUTH_USER)
+      console.log('server에서 옴 =', action.payload)
         return { ...state, userData: action.payload }
         break;   
 

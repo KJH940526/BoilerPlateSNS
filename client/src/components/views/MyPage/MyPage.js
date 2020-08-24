@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import { withRouter} from 'react-router-dom'
 
@@ -6,9 +6,32 @@ import { withRouter} from 'react-router-dom'
 function MyPage(props) {
 
   const [Password, setPassword] = useState("");
+  
   const [ConfirmPassword, setConfirmPassword] = useState("");
+  const [currentName, setCurrentName] = useState("");
+  const [currentImage, setCurrentImage] = useState("");
+  const [UpdateName, setUpdateName] = useState("");
 
+  useEffect(() => {
+    axios.get("api/users/auth").then((response) => {
+      console.log("MyPage라고 말해주세요", response.data);
+        if(response.data.isAuth){
+          console.log("response.data에 들어옴")
+          setCurrentName(response.data.name)
+          setCurrentImage(response.data.image)
+          console.log(response.data)
+          console.log("커런트네임", currentName)
+          console.log("커런트이미지", currentImage)
+        } else {
+          alert("유저정보를 가져오는데 실패했습니다.")
+          props.history.push("/");
+        }
+    });
+  }, []);
 
+  const onNameHandler = (event) => {
+    setUpdateName(event.currentTarget.value)
+  }
 
   const onPasswordHandler = (event) => {
     setPassword(event.currentTarget.value);
@@ -22,22 +45,25 @@ function MyPage(props) {
   const onSubmitHandler = (event) => {
     event.preventDefault();
 
-
-
     if(Password !== ConfirmPassword){
       return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
     }
     let body = {
+      name : UpdateName !== "" ? UpdateName : currentName,
       password: Password,
     };  
     // ConfirmPassword는 데이터베이스로 보내지 않기 때문에 body x
-
+    
     axios.post('/api/users/modify',body)
-    .then(response => console.log("mypage",response.data.user))
+    .then(response => {
+      console.log("mypage body", body);
+      console.log("mypage",response.data.user);
+    })
     alert("회원정보가 수정되었습니다.");
     props.history.push("/");
   };
   
+
 
 
 
@@ -49,6 +75,9 @@ function MyPage(props) {
       <form style={{display:'flex', flexDirection: 'column'}}
           onSubmit={onSubmitHandler}
       >
+        <label>Name</label>
+        <input type="text" value={UpdateName} onChange={onNameHandler}></input>
+
         <label>PassWord</label>
         <input type="password" value={Password} onChange={onPasswordHandler}/>
 
@@ -57,11 +86,13 @@ function MyPage(props) {
         
         <br/>
 
+
+
+
         <button type = "submit">
           회원 수정
         </button>
       </form>
-      
     </div>
   )
 }

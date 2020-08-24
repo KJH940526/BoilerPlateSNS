@@ -70,20 +70,21 @@ userSchema.pre("save", function (next) {
 userSchema.pre("updateOne", function (next) {
   let user = this; //arrow function 대신 function을 사용한 이유
   console.log("updateOne pre에 들어왔어요");
+  // console.log(user)
   console.log(user._update);
-  console.log("user.js", user._update.password);
-  if (user._update.password) {
+  console.log(user._update.$set.password);
+  if (user._update.$set.password) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
-      console.log("genSalt에 들어왔어요");
+      console.log("password genSalt에 들어왔어요");
       if (err) return next(err);
-      bcrypt.hash(user._update.password, salt, function (err, hash) {
+      bcrypt.hash(user._update.$set.password, salt, function (err, hash) {
         if (err) return next(err);
-        user._update.password = hash;
+        user._update.$set.password = hash;
         console.log(hash);
         next();
       });
-    });
-  } else {
+    });       //이미지를 바꿀떄
+  } else if(user._update.$set.image){
     next();
   }
 });

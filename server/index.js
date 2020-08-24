@@ -33,6 +33,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.post("/api/users/register", (req, res) => {
+  console.log("reg",req.body)
   const user = new User(req.body);
   user.save((err, userInfo) => {
     if (err) return res.json({ success: false, err });
@@ -43,6 +44,8 @@ app.post("/api/users/register", (req, res) => {
 });
 
 app.post("/api/users/login", (req, res) => {
+  console.log("login",req.body)
+  console.log("login",req.user)
   User.findOne({ email: req.body.email }, (err, user) => {
     if (!user) {
       return res.json({
@@ -68,7 +71,6 @@ app.post("/api/users/login", (req, res) => {
       const Verifiedtoken = jwt.sign(user._id.toHexString(), "registerToken");
       // console.log()
       // const url = `${ip.address()}/${port}/confirmation/${Verifiedtoken}`
-      // const url1 = `localhost:3000/confirmation/`
       const url2 = `http://localhost:3000/confirmation/${Verifiedtoken}`;
       if (err) {
         return res.json({ success: false, err });
@@ -99,22 +101,44 @@ app.post("/api/users/login", (req, res) => {
   });
 });
 
+// app.get("/api/users/auth", auth, (req, res) => {
+//   // console.log("auth index",req.user)
+//   res.status(200).json({
+//     _id: req.user._id,
+//     isAdmin: req.user.role === 0 ? false : true,
+//     isAuth: true,
+//     email: req.user.email,
+//     name: req.user.name,
+//     lastname: req.user.lastname,
+//     role: req.user.role,
+//     image: req.user.image,
+
+//     isVerified: req.user.isVerified,
+//   })
+// });
+
 app.get("/api/users/auth", auth, (req, res) => {
+  // console.log("auth index",req.user)
   res.status(200).json({
     _id: req.user._id,
     isAdmin: req.user.role === 0 ? false : true,
     isAuth: true,
     email: req.user.email,
+    // password : req.user.password, 
+    //password를 받는 이유는 비밀번호 수정할떄 쓰기위해서?
+    //아니면 전체를 가져오는 다른 axios 요청을 가지고 클라이언트에 보내야함
     name: req.user.name,
     lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image,
 
     isVerified: req.user.isVerified,
-  });
+  })
 });
 
 app.get("/api/users/getConfirmation", auth, (req, res) => {
+  console.log("get",req.body)
+  console.log("get",req.user)
   console.log("req.user", req.user);
   console.log("getConfirm에 들어옴");
   User.findByIdAndUpdate(
@@ -130,6 +154,8 @@ app.get("/api/users/getConfirmation", auth, (req, res) => {
 });
 
 app.get("/api/users/logout", auth, (req, res) => {
+  console.log("log",req.body)
+  console.log(",log",req.user)
   console.log("6번 req.user", req.user);
   User.findByIdAndUpdate({ _id: req.user._id }, { token: "" }, (err, user) => {
     if (err) return res.json({ success: false, err });
@@ -186,17 +212,26 @@ app.post("/api/users/modify", auth, (req, res)=>{
   if (err) return res.json({ success: false, err });
   User.updateOne(
     {_id: user._id},
-    { password: req.body.password},
-    (err,user)=>{
+    {//$set을 해야 해당 필드만 바뀝니다. https://www.zerocho.com/category/MongoDB/post/579e2821c097d015000404dc
+      $set: {       //req.body => body로 보내고
+        password: req.body.password,
+        image: req.body.image,
+        name: req.body.name,
+            },
+    },
+    (err,userInfo)=>{
+      console.log("리턴 user",user);
+      // console.log("리턴 userInfo",userInfo);
       if(err) return res.json({success: false, err})
       return res.status(200).send({
         success:true,
-        user : user
+        user : userInfo,
         })
       }
     )
   })
 })
+
 
 app.listen(port, () => {
   console.log(`http://localhost:${port}`);
