@@ -22,11 +22,14 @@ function MyPage(props) {
           setCurrentName(response.data.name)
           setCurrentImage(response.data.image)
           setcurrentPassword(response.data.password) //?
+          
+
 
           console.log(response.data)
           console.log("커런트네임", currentName)   //?
           console.log("커런트이미지", currentImage) //?
           console.log("커런트 비밀번호",currentPassword) //?
+
         } else {
           alert("유저정보를 가져오는데 실패했습니다.")
         }
@@ -54,9 +57,12 @@ function MyPage(props) {
     if(Password !== ConfirmPassword){
       return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
     }
+    console.log("커렌트 패스워드",currentPassword)
+    //비크립트 떄문에 무조건 다를수밖에 없음
+    console.log("패스워드", Password)
     let body = {
       name: UpdateName !== "" ? UpdateName : currentName,
-      password: Password === currentPassword ? currentPassword : Password
+      password: Password !== "" ? Password : currentPassword
     };  
     // ConfirmPassword는 데이터베이스로 보내지 않기 때문에 body x
     
@@ -83,7 +89,7 @@ function MyPage(props) {
         <input type="text" value={UpdateName} onChange={onNameHandler}></input>
 
         <label>PassWord</label>
-        <input type="password" value={Password} onChange={onPasswordHandler}/>
+        <input type="password" value={Password} onChange={onPasswordHandler} placeholder=""/>
 
         <label>Confirm PassWord</label>
         <input type="password" value={ConfirmPassword} onChange={onConfirmPasswordHandler}/>
