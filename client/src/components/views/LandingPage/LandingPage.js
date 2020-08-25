@@ -1,8 +1,17 @@
-import React, { } from "react";
+import React, { useEffect } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
 
+
+
 function LandingPage(props) {
+
+  useEffect(() => {
+    console.log("랜딩페이지")
+  }, [])
+
+
+
   const onClickHandler = () => {
     axios.get("api/users/logout").then((response) => {
       console.log("response.data : ", response.data);

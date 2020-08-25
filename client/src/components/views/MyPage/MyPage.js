@@ -23,8 +23,6 @@ function MyPage(props) {
           setCurrentImage(response.data.image)
           setcurrentPassword(response.data.password) //?
           
-
-
           console.log(response.data)
           console.log("커런트네임", currentName)   //?
           console.log("커런트이미지", currentImage) //?
@@ -32,6 +30,9 @@ function MyPage(props) {
 
         } else {
           alert("유저정보를 가져오는데 실패했습니다.")
+          console.log("마이페이지",props)
+          props.history.push("")
+          //auth가 가장 위에서 강하기떄문에 
         }
     });
   }, []);
