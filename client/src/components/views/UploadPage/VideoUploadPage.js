@@ -6,45 +6,44 @@ import DropZone from 'react-dropzone'
 const { TextArea } = Input
 const { Title } = Typography
 
-const PrivateOptions = [
-  {value:0, label: "Private"},
-  {value:1, label: "Public"}
-];
+const Private = [
+  { value: 0, label: 'Private' },
+  { value: 1, label: 'Public' }
+]
 
-const CategoryOptions = [
-  {value:0 ,label: "Film & Animation"},
-  {value:1 ,label: "Autos"},
-  {value:2 ,label: "Music"},
-  {value:3 ,label: "Pets"},
+const Catogory = [
+  { value: 0, label: "Film & Animation" },
+  { value: 1, label: "Autos & Vehicles" },
+  { value: 2, label: "Music" },
+  { value: 3, label: "Pets & Animals" },
+  { value: 4, label: "Sports" },
 ]
 
 
 function VideoUploadPage(props) {
 
-  const [VideoTitle, setVideoTitle] = useState("")
-  const [Description, setDescription] = useState("")
+  const [title, setTitle] = useState("");
+  const [Description, setDescription] = useState("");
+  const [privacy, setPrivacy] = useState(0)
+  const [Categories, setCategories] = useState("Film & Animation")
 
-  const [Private, setPrivate] = useState(0) //Private는 0이고 Public이면 1로 할 예정
-  const [Category, setCategory] = useState(0)
 
+  const handleChangeTitle = (event) => {
+    setTitle(event.currentTarget.value);
+  };
 
-  const onTitleChange = (e) => {
-    // console.log(e)
-    // console.log(e.currentTarget)
-    setVideoTitle(e.currentTarget.value)
-  }
+  const handleChangeDecsription = (event) => {
+    console.log(event.currentTarget.value);
+    setDescription(event.currentTarget.value);
+  };
 
-  const onDescriptionChange = (e) => {
-    setDescription(e.currentTarget.value)
-  }
+  const handleChangeOne = (event) => {
+    setPrivacy(event.currentTarget.value);
+  };
 
-  const onPrivateChange = (e) => {
-    setPrivate(e.currentTarget.value)
-  }
-
-  const onCategoryChange = (e) => {
-    setCategory(e.currentTarget.value)
-  }
+  const handleChangeTwo = (event) => {
+    setCategories(event.currentTarget.value);
+  };
   
 
 
@@ -85,38 +84,33 @@ function VideoUploadPage(props) {
         <br />
         <br />
 
-        <lable>Title</lable>
-
-        <Input 
-          onChange={onTitleChange} 
-          value={VideoTitle}
-        />
+        <label>Title</label>
+        <Input onChange={handleChangeTitle} value={title} />
 
         <br />
         <br />
 
-
-        <lable>Description</lable>
-        <TextArea 
-          onChange={onDescriptionChange}
-          value={Description} 
-        />
-
+        <label>Description</label>
+        <TextArea onChange={handleChangeDecsription} value={Description} />
         <br />
         <br />
 
-        <select onChange={onPrivateChange}>
-          {PrivateOptions.map((item, index) => (
-            <option key={index} value={item.value}>{item.vale}</option>
+        <select onChange={handleChangeOne}>
+          {Private.map((item, index) => (
+            <option key={index} value={item.value}>
+              {item.label}
+            </option>
           ))}
         </select>
 
         <br />
         <br />
 
-        <select onChange={onCategoryChange}>
-          {CategoryOptions.map((item, index) => (
-            <option key={index} value={item.value}>{item.vale}</option>
+        <select onChange={handleChangeTwo}>
+          {Catogory.map((item, index) => (
+            <option key={index} value={item.label}>
+              {item.label}
+            </option>
           ))}
         </select>
 
