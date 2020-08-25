@@ -25,7 +25,28 @@ function VideoUploadPage(props) {
   const [Description, setDescription] = useState("")
 
   const [Private, setPrivate] = useState(0) //Private는 0이고 Public이면 1로 할 예정
-  const [Category, setCategory] = useState("Film & Animation")
+  const [Category, setCategory] = useState(0)
+
+
+  const onTitleChange = (e) => {
+    // console.log(e)
+    // console.log(e.currentTarget)
+    setVideoTitle(e.currentTarget.value)
+  }
+
+  const onDescriptionChange = (e) => {
+    setDescription(e.currentTarget.value)
+  }
+
+  const onPrivateChange = (e) => {
+    setPrivate(e.currentTarget.value)
+  }
+
+  const onCategoryChange = (e) => {
+    setCategory(e.currentTarget.value)
+  }
+  
+
 
 
   return (
@@ -65,16 +86,26 @@ function VideoUploadPage(props) {
         <br />
 
         <lable>Title</lable>
-        <Input onChange value={VideoTitle} />
+
+        <Input 
+          onChange={onTitleChange} 
+          value={VideoTitle}
+        />
+
         <br />
         <br />
+
 
         <lable>Description</lable>
-        <TextArea onChange value={Description} />
+        <TextArea 
+          onChange={onDescriptionChange}
+          value={Description} 
+        />
+
         <br />
         <br />
 
-        <select onChange>
+        <select onChange={onPrivateChange}>
           {PrivateOptions.map((item, index) => (
             <option key={index} value={item.value}>{item.vale}</option>
           ))}
@@ -83,7 +114,7 @@ function VideoUploadPage(props) {
         <br />
         <br />
 
-        <select onChange>
+        <select onChange={onCategoryChange}>
           {CategoryOptions.map((item, index) => (
             <option key={index} value={item.value}>{item.vale}</option>
           ))}
