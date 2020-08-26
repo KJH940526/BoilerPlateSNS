@@ -5,6 +5,15 @@ import DropZone from 'react-dropzone'
 import axios from 'axios'
 import { useSelector } from "react-redux";
 
+// 0. OnDrop func 만들기
+// 1. 노드 서버에 파일을 저장하기 위해 디펜던시를 다운로드
+// 1-1 npm install multer --save ==> 서버에 저장하기 떄문에 server 폴더에서 다운로드\
+// 2 비디오 파일을 서버로 보내기
+// 3. 받은 비디오 파일을 서버에서 저장
+// 4. 파일 저장 결로를 클라이언트로 전달해주기
+
+
+
 const { TextArea } = Input
 const { Title } = Typography
 
@@ -34,12 +43,13 @@ function VideoUploadPage(props) {
 
 
   const handleChangeTitle = (event) => {
+    console.log("이벤트",event);
+    console.log("이벤트.커런트타겟",event.currentTarget);
     setTitle(event.currentTarget.value);
   };
 
   const handleChangeDecsription = (event) => {
-    // console.log(event);
-    // console.log(event.currentTarget.value);
+
     setDescription(event.currentTarget.value);
   };
 

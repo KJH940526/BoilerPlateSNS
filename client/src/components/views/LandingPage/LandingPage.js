@@ -1,7 +1,5 @@
-import React, { useEffect, useState, Component } from "react";
-import axios from "axios";
+import React from "react";
 import { withRouter } from "react-router-dom";
-import auth from "../../../hoc/auth";
 import { useSelector, useDispatch } from "react-redux"
 import { logoutUser } from "../../../_actions/user_action";
 
