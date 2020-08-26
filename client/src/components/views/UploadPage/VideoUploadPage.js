@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import {Typography,Button,Form,message,Input} from 'antd'
 import Icon from "@ant-design/icons"
 import DropZone from 'react-dropzone'
+import axios from 'axios'
+import { useSelector } from "react-redux";
 
 const { TextArea } = Input
 const { Title } = Typography
@@ -21,6 +23,9 @@ const Catogory = [
 
 
 function VideoUploadPage(props) {
+  const user = useSelector(state => state.user);
+
+  console.log("유저유저유저유저",user)
 
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
@@ -33,7 +38,8 @@ function VideoUploadPage(props) {
   };
 
   const handleChangeDecsription = (event) => {
-    console.log(event.currentTarget.value);
+    // console.log(event);
+    // console.log(event.currentTarget.value);
     setDescription(event.currentTarget.value);
   };
 
@@ -46,7 +52,28 @@ function VideoUploadPage(props) {
   };
   
 
+  const onDrop = (files) => {
 
+    let formData = new FormData
+    const config = {
+      header: { "content-type": "multipart/form-data" },
+    };
+                                    //첫번쨰거를 가져오기위해서 어레이로함
+    formData.append("file", files[0])
+  //https://yohanpro.com/posts/codereview/2 
+  //만약 추가로 formData에 값을 집어넣어 req.body에서 사용하고 싶다면 메소드 안에 따로 append해서 저장해 두어야 한다.
+    console.log(files)
+
+    axios.post('/api/video/uploadfiles', formData,config)
+      .then((response)=>{
+        if(response.data.success){
+
+        } else {
+          alert("업로드 실패했습니다.")
+        }
+      })
+
+  }
 
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auth" }}>
@@ -58,7 +85,10 @@ function VideoUploadPage(props) {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {/*드랍존*/}
 
-          <DropZone onDrop multiple maxSize>
+          <DropZone 
+          onDrop={onDrop}
+          multiple={false} 
+          maxSize={10000000}>
             {({ getRootProps, getInputProps }) => (
               <div
                 style={{

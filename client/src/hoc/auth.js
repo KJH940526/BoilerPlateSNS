@@ -15,39 +15,39 @@ export default function (SpecificComponent, option, adminRoute = null) {
 
         if (!response.payload.isAuth) {
           console.log("Auth response.payload", response.payload);
-          
+
           if (option) {
             console.log("Auth response.payload", response.payload);
             console.log("Auth option", option);
             console.log("Auth adminRoute", adminRoute);
             console.log("response.payload.isAdmin", response.payload.isAdmin);
-            props.history.push("/login");
+            props.history.replace("/login");
           }
-        
+
         } else if (response.payload.isAuth && !response.payload.isVerified) {
           console.log("Auth response.payload", response.payload);
           console.log("Auth option", option);
           console.log("Auth adminRoute", adminRoute);
           console.log("response.payload.isAdmin", response.payload.isAdmin);
-          props.history.push("/notconfirmation");
-        
+          props.history.replace("/notconfirmation");
+
         } else {
-          
+
           if (adminRoute && !response.payload.isAdmin) {
             console.log("Auth response.payload", response.payload);
             console.log("Auth option", option);
             console.log("Auth adminRoute", adminRoute);
             console.log("response.payload.isAdmin", response.payload.isAdmin);
-            props.history.push("/");
-          
+            props.history.replace("/");
+
           } else {
-            
+
             if (option === false) {
               console.log("Auth response.payload", response.payload);
               console.log("Auth option", option);
               console.log("Auth adminRoute", adminRoute);
               console.log("response.payload.isAdmin", response.payload.isAdmin);
-              props.history.push("/");
+              props.history.replace("/");
             }
           }
         }

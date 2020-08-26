@@ -6,9 +6,18 @@ import { withRouter } from "react-router-dom";
 
 function LandingPage(props) {
 
+
   useEffect(() => {
-    console.log("랜딩페이지")
-  }, [])
+    console.log("랜딩페이지");
+    axios.get("api/users/auth").then((response) => {
+      console.log("랜딩페이지 말해주세요", response.data);
+    });
+  }, []);
+  
+
+
+
+  // console.log(isAuth)
 
 
 
@@ -51,6 +60,7 @@ function LandingPage(props) {
         <button onClick={onRegister}>회원가입</button> <br />
         <button onClick={onLogin}>로그인</button> <br />
         <button onClick={onClickHandler}> 로그아웃 </button> <br />
+
         <button onClick={onMyPage}> 회원수정 </button>
       </span>
     </div>

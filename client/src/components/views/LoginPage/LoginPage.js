@@ -138,7 +138,7 @@ function LoginPage(props) {
           onFailure={responseFail}
         />
         <br />
-        
+
         <KaKaoBtn
           //styled component 통해 style을 입혀 줄 예정 
           jsKey={'2c0529d015c5bd510bb0a3586f896493'}
@@ -157,7 +157,7 @@ function LoginPage(props) {
           //어떤 정보를 받아오는지 입력하는 필드
           callback={responseFacebook}
         />
-        
+
       </form>
     </div>
   );

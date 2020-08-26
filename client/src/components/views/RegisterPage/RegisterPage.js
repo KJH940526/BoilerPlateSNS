@@ -75,6 +75,7 @@ function RegisterPage(props) {
       password: res.profileObj.googleId,
       image: res.profileObj.imageUrl,
       isVerified: true,
+      isSns: true
     };
     console.log("바디", res);
     dispatch(registerUser(body)).then((response) => {
@@ -106,6 +107,7 @@ function RegisterPage(props) {
       password: pw,
       image: res.profile.properties.profile_image,
       isVerified: true,
+      isSns: true
     };
     console.log("바디", body);
     dispatch(registerUser(body)).then((response) => {
@@ -133,7 +135,8 @@ function RegisterPage(props) {
       password: res.id,
       image: res.picture.data.url,
       isVerified: true,
-    };
+      isSns: true
+    }; //바디에 sns를 true로 해서 보냈기떄문에 수정페이지(mypage)에서 분기처리 가능하다.
     console.log("바디", body);
     dispatch(registerUser(body)).then((response) => {
       if (response.payload.success) {

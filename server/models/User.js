@@ -40,11 +40,18 @@ const userSchema = mongoose.Schema({
   tokenExp: {
     type: Number,
   },
+
   //이메일 인증
   isVerified: {
     type: Boolean,
     default: false,
   },
+
+  isSns: {
+    type: Boolean,
+    default: false,
+  },
+
 });
 
 

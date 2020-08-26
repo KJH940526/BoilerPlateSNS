@@ -20,6 +20,10 @@ const jwt = require("jsonwebtoken");
 const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
 
+///추가추가 왕추가 비디오 이미지 스키마
+const { Image } = require('./models/Image')
+const multer = require("multer")
+
 const mongoose = require("mongoose");
 
 mongoose
@@ -119,6 +123,7 @@ app.get("/api/users/auth", auth, (req, res) => {
     //아니면 전체를 가져오는 다른 axios 요청을 가지고 클라이언트에 보내야함
     password : req.user.password,
     isVerified: req.user.isVerified,
+    isSns : req.user.isSns
   })
 });
 
@@ -224,6 +229,14 @@ app.post("/api/users/modify", auth, (req, res)=>{
     )
   })
 })
+
+app.post('/api/video/uploadfiles',(req,res)=>{
+  //req는 클라이언트에서 보내온거
+  //클라이언트에 받은 비디오를 서버에 저장한다.
+  
+})
+
+
 
 
 app.listen(port, () => {
