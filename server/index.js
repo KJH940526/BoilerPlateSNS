@@ -20,9 +20,37 @@ const jwt = require("jsonwebtoken");
 const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
 
+// 비디오
+const { Video } = require('./models/Video')
+
 ///추가추가 왕추가 비디오 이미지 스키마
 const { Image } = require('./models/Image')
 const multer = require("multer")
+
+// console.log(multer);
+
+let storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/");
+  },
+  // 로그한번 해보기
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}_${file.originalname}`);
+  },
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    if (ext !== ".mp4") {
+      return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
+    }
+    cb(null, true);
+  },
+});
+
+// console.log("스토리지",storage);
+
+
+
+
 
 const mongoose = require("mongoose");
 
@@ -230,9 +258,19 @@ app.post("/api/users/modify", auth, (req, res)=>{
   })
 })
 
+
+
+
+
+
+
+// 비디오
 app.post('/api/video/uploadfiles',(req,res)=>{
   //req는 클라이언트에서 보내온거
   //클라이언트에 받은 비디오를 서버에 저장한다.
+  //클라이언트에서 받은 비디오를 저장하기 위해서
+  // multer라는 디펜던시를 추가한다.
+
   
 })
 
