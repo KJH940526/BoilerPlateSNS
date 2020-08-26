@@ -6,6 +6,7 @@ import {
   Link
 } from "react-router-dom";
 
+// 이것도 수정해줘야하는거 아닌가? 이름만 정해주는거라서 필요가 없음
 import LandingPage from './components/views/LandingPage/LandingPage';
 import LoginPage from './components/views/LoginPage/LoginPage'
 import RegisterPage from './components/views/RegisterPage/RegisterPage'

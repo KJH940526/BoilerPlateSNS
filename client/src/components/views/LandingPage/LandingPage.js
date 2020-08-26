@@ -1,39 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, Component } from "react";
 import axios from "axios";
 import { withRouter } from "react-router-dom";
+import auth from "../../../hoc/auth";
+import { useSelector, useDispatch } from "react-redux"
+import { logoutUser } from "../../../_actions/user_action";
+
+function LandingWrapper (props){
+  const userData = useSelector(state => state.user.userData)
+  console.log("이게 렌딩페이지 감싼다",userData);
+  return (
+  <> {/* 객체는 얕은비교를 수행한다?? 공부하기*/}
+    {userData !==undefined  &&<LandingPage userData={userData} props={props}></LandingPage>}
+  </>
+  );
+}
 
 
 
-function LandingPage(props) {
+function LandingPage({props, userData}) {
+  let dispatch = useDispatch();
 
-
-  useEffect(() => {
-    console.log("랜딩페이지");
-    axios.get("api/users/auth").then((response) => {
-      console.log("랜딩페이지 말해주세요", response.data);
-    });
-  }, []);
+  console.log("랜딩페이지유저 데이터",userData);
   
-
-
-
-  // console.log(isAuth)
-
-
-
   const onClickHandler = () => {
-    axios.get("api/users/logout").then((response) => {
-      console.log("response.data : ", response.data);
-      if (response.data.success) {
-        alert("로그아웃에 성공했습니다.");
-        props.history.push("/");
-      } else {
-        alert("로그아웃 하는데 실패 했습니다.");
-      }
-    });
+        dispatch(logoutUser())
+        .then(response => {
+          console.log("이거다ㅏ닫다", response.payload);
+          if(response.payload.success){
+            alert("로그아웃에 성공했습니다.");
+            props.history.push('/')
+          } else {
+            alert("로그아웃 하는데 실패 했습니다.");
+          }
+        })
   };
 
   const onLogin = () => {
+    console.log(userData.isAuth);
     props.history.push("/login");
   };
 
@@ -57,14 +60,13 @@ function LandingPage(props) {
     >
       <span>
         <h2>LandingPage</h2>
-        <button onClick={onRegister}>회원가입</button> <br />
-        <button onClick={onLogin}>로그인</button> <br />
-        <button onClick={onClickHandler}> 로그아웃 </button> <br />
-
-        <button onClick={onMyPage}> 회원수정 </button>
+        <div>{!userData.isAuth ? <button onClick={onRegister}>회원가입</button>: false}</div>
+        <div>{!userData.isAuth ? <button onClick={onLogin}>로그인</button>: false}</div>
+        <div>{userData.isAuth ? <button onClick={onClickHandler}> 로그아웃 </button>: false}</div>
+        <div>{userData.isAuth&&!userData.isSns ? <button onClick={onMyPage}> 회원수정 </button>: false}</div>
       </span>
     </div>
   );
 }
-
-export default withRouter(LandingPage);
+                //위의 감싸준것에 따라서 달라지기 때문에 LandingWrapper를 보내주는게 맞다.
+export default withRouter(LandingWrapper);

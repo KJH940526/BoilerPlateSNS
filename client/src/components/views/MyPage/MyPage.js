@@ -8,13 +8,20 @@ function MyPage(props) {
   //https://velog.io/@kim6515516/useSelector%EC%83%81%ED%83%9C%EC%A1%B0%ED%9A%8C-useDispatch%EC%95%A1%EC%85%98-%EB%94%94%EC%8A%A4%ED%8C%A8%EC%B9%98
   
   const user = useSelector(state => state.user);
-  console.log("유저",user)
-  console.log("유저 데이타",user.userData)
+  // console.log("유저",user)
+  // console.log("유저 데이타",user.userData)
   //함수나 const로 정의한곳 안에서만 써야하는데 추후 자세히 알아보기,
   //처음에 user.userData가 언디파인드가 뜨는 이유??
   //리액트의 생성주기 다시한번 공부하기
   //useSelector 공부하기
   //onConfirmPasswordHandler 이부분 주석 지워보기
+  //https://blog.woolta.com/categories/1/posts/200
+  //https://medium.com/@shlee1353/%EB%A6%AC%EC%95%A1%ED%8A%B8-hooks-usestate-4%EA%B0%80%EC%A7%80-%EC%83%81%EC%9A%A9%EB%B0%A9%EB%B2%95-dfe8b2096750
+    
+  //timestamps true mongoose 알아보기
+
+  //https://www.google.com/search?q=replace+push&oq=replace+push&aqs=chrome..69i57j0l7.5846j0j1&sourceid=chrome&ie=UTF-8
+  //replace와 push의 차이
 
   const [Password, setPassword] = useState("");
   const [ConfirmPassword, setConfirmPassword] = useState("");
@@ -39,7 +46,6 @@ function MyPage(props) {
           setcurrentPassword(password)  
           //이거 위에 주석처리해보고 아래 콘솔을 비교해보면 useeffect가 어떤 원리로 돌아가는지 느낌 잡을수 있음
           
-
           // console.log("useeffect 커런트네임", currentName)     //? useeffect안에서는 값이 변하지 않는다. //이거 녹음해놓음
           // console.log("useeffect 커런트이미지", currentImage)
           // console.log("useeffect 커런트 비밀번호",currentPassword)
@@ -87,6 +93,7 @@ function MyPage(props) {
     console.log("커렌트 패스워드",currentPassword)
     //비크립트 떄문에 무조건 다를수밖에 없음
     console.log("패스워드", Password)
+
     let body = {
       name: UpdateName !== "" ? UpdateName : currentName,
       password: Password !== "" ? Password : currentPassword,
