@@ -23,9 +23,9 @@ const Catogory = [
 
 
 function VideoUploadPage(props) {
-  const user = useSelector(state => state.user);
-
-  console.log("유저유저유저유저",user)
+  // const user = useSelector(state => state.user);
+  // console.log("유저유저유저유저",user)
+  // 주석 잡고 풀어보기
 
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");

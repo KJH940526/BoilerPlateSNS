@@ -1,3 +1,4 @@
+  
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { registerUser } from "../../../_actions/user_action";
@@ -58,11 +59,13 @@ function RegisterPage(props) {
           console.log("clinet props 로그인", props);
           console.log("페이로드로드로드", response.payload.loginSuccess);
           if (response.payload.loginSuccess) {
+            console.log("로그인 리스폰 페이로드", response.payload);
             props.history.push("/notconfirmation");
-          } else {
-            alert("회원가입에 실패하였습니다.");
-          }
+          } 
         });
+      } else if(!response.payload.success) {
+        alert("이미 회원가입한 유저입니다.")
+        console.log("레기스터유저 페이로드",response.payload)
       }
     });
   };
@@ -85,13 +88,10 @@ function RegisterPage(props) {
           alert("회원가입 성공");
           props.history.push("/login");
           console.log("임마", body);
-          if (response.payload.loginSuccess) {
-            props.history.push("/notconfirmation");
-          } else {
-            alert("이미 가입된 회원입니다");
-            props.history.push("/");
-          }
         });
+      } else {
+        alert("이미 가입된 회원입니다");
+        props.history.push("/");
       }
     });
   };
@@ -116,13 +116,10 @@ function RegisterPage(props) {
           alert("회원가입 성공");
           props.history.push("/login");
           console.log("임마", body);
-          if (response.payload.loginSuccess) {
-            props.history.push("/notconfirmation");
-          } else {
-            alert("이미 가입된 회원입니다");
-            props.history.push("/");
-          }
-        });
+        })
+      } else {
+        alert("이미 가입된 회원입니다");
+        props.history.push("/");
       }
     });
   };
@@ -136,7 +133,7 @@ function RegisterPage(props) {
       image: res.picture.data.url,
       isVerified: true,
       isSns: true
-    }; //바디에 sns를 true로 해서 보냈기떄문에 수정페이지(mypage)에서 분기처리 가능하다.
+    };
     console.log("바디", body);
     dispatch(registerUser(body)).then((response) => {
       if (response.payload.success) {
@@ -144,13 +141,10 @@ function RegisterPage(props) {
           alert("회원가입 성공");
           props.history.push("/login");
           console.log("임마", body);
-          if (response.payload.loginSuccess) {
-            props.history.push("/notconfirmation");
-          } else {
-            alert("이미 가입된 회원입니다");
-            props.history.push("/");
-          }
         });
+      } else {
+        alert("이미 가입된 회원입니다");
+        props.history.push("/");
       }
     });
   };
