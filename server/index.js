@@ -49,8 +49,8 @@ let storage = multer.diskStorage({
   //파일필터는 mp4만 받을수 있게한다.
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    if (ext !== ".mp4") {
-    // if(ext !== ".mp4" || ext !== ".png"){ //png랑 mp4를 받고싶은경우
+    // if (ext !== ".mp4") {
+    if(ext !== ".mp4" || ext !== ".png"){ //png랑 mp4를 받고싶은경우
       return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
     }
     cb(null, true);
@@ -309,44 +309,47 @@ app.post("/api/video/thumbnail", (req, res) => {
   let filePath = "";
   let fileDuration ="";
 
-  console.log("req.body",req.body);
+  console.log("1번 req.body",req.body);
   // 썸네일 생성 하고 비디오 러닝타임도 가져오기
 
   //비디오 정보 가져오기
   ffmpeg.ffprobe(req.body.url, function(err,metadata){
-    console.dir(metadata);
-    console.log(metadata.format.duration);
+    // console.dir("dir",metadata);
+    // console.log("메타데이터",metadata);
+    console.log("비동기 떄문에 ?번 메타데이터 포맷",metadata.format.duration);
 
     fileDuration = metadata.format.duration
-  })
 
-  // console.log("파일 듀레이션", fileDuration);
+    console.log("파일듀레이션1",fileDuration);
+  })
 
 
   //썸네일 생성
   ffmpeg(req.body.url)
   .on('filenames', function (filenames) {
-    console.log("Will generate" + filenames.join(','))
-    console.log(filenames)
+    console.log("2번 Will generate" + filenames.join(','))
+    console.log("3번 파일네임스",filenames)
     
     // filePath = "../uploads/thumbnails/" + filenames[0]
     filePath = "../uploads/thumbnails/" + filenames[0]
-    console.log("파일 path",filePath);
+    console.log("4번 파일 path",filePath);
   })
   .on('end', function(){
-    console.log("스크린샷 taken")
-    return res.json({ success: true, thumbsFilePath: thumbsFilePath, fileDuration: fileDuration})
+    console.log("6번 스크린샷 taken")
+    console.log("end fileDuration", fileDuration);  //보낸는 이름   //정보가 들어있음
+    return res.json({ success: true, url: filePath, fileDuration: fileDuration})
   })
-  // .on('error', function(err){
-  //   console.log(err);
-  //   return res.json({success: false, err});
-  // })
+  .on('error', function(err){
+    console.log("에러",err);
+    return res.json({success: false, err});
+  })
   .screenshots({
-    count:3,
+    count:1,
     folder: "../uploads/thumbnails/",
     size:'320x240',
     filename:'thumbnail-%b.png'
   })
+  
 });
 
 
