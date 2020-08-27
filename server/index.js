@@ -349,7 +349,6 @@ app.post("/api/video/thumbnail", (req, res) => {
     size:'320x240',
     filename:'thumbnail-%b.png'
   })
-  
 });
 
 
