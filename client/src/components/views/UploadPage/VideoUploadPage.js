@@ -109,6 +109,26 @@ function VideoUploadPage(props) {
       .then((response)=>{
         if(response.data.success){
           console.log(response.data);
+          //비디오를 올리고 성공하면 서버에 요청을 한번 더한다.
+          
+          let variable = {  //서버에서 url이랑 fileName을 받음
+            url: response.data.url,
+            fileName: response.data.fileName
+          }
+
+          Axios.post("/api/video/thumbnail", variable)
+          .then(response => {
+            if(response.data.success){
+              console.log(response.data);
+
+
+            } else {
+              console.log(response.data);
+              alert("썸네일 생성에 실패했습니다.")
+            }
+          })
+
+
         } else {
           console.log(response.data);
           alert("업로드 실패했습니다.")
@@ -149,9 +169,9 @@ function VideoUploadPage(props) {
           </DropZone>
 
           {/*썸네일*/}
-          {/* <div>
+          <div>
             <img src alt />
-          </div> */}
+          </div>
         </div>
         <br />
         <br />
@@ -198,3 +218,30 @@ function VideoUploadPage(props) {
 }
 
 export default VideoUploadPage
+
+
+/*
+//ffmpeg docker 나중에 검색해보기
+
+//https://www.it-swarm.dev/ko/docker/docker-%EC%BB%A8%ED%85%8C%EC%9D%B4%EB%84%88-%EB%82%B4%EC%97%90%EC%84%9C-ffmpeg%EB%A5%BC-%EC%82%AC%EC%9A%A9-%EA%B0%80%EB%8A%A5%ED%95%98%EA%B2%8C-%EB%A7%8C%EB%93%9C%EB%8A%94-%EB%B0%A9%EB%B2%95%EC%9D%80-%EB%AC%B4%EC%97%87%EC%9E%85%EB%8B%88%EA%B9%8C/838828525/
+
+
+ffmpeg로 
+
+
+*/
+
+/*
+ffmpeg로 비디오 썸네일 생성하기
+썸네일 생성을 위한 디펜던시를 다운받기 
+-> fluent-ffmpeg를 추가해야하는데 그전에 ffmpeg를 인터넷에서
+설치해야한다. 그리고 cmd창에서 set명령어로 프로세스 비트수를 확인할수 있다 ( 파워셀은 안됨 )
+ffmpeg 설치하는 방법 https://ko.wikihow.com/%EC%9C%88%EB%8F%84%EC%9A%B0%EC%97%90-FFmpeg-%EC%84%A4%EC%B9%98%ED%95%98%EB%8A%94-%EB%B0%A9%EB%B2%95
+
+설치가 완료되었으면 npm install fluent-ffmpeg를 서버사이드에 인스톨한다.
+
+
+
+
+
+*/

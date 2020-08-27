@@ -27,6 +27,7 @@ const { Video } = require('./models/Video')
 const { Image } = require('./models/Image')
 
 const multer = require("multer")
+var ffmpeg = require('fluent-ffmpeg')
 
 
 
@@ -37,7 +38,8 @@ const multer = require("multer")
 let storage = multer.diskStorage({
   //파일을 올리리면 도착지가 uploads 폴더에다가 저장됨
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    // cb(null, "./uploads/");
+    cb(null, "../uploads/");
   },
   // 로그한번 해보기
   //파일이름을 정해줌
@@ -294,10 +296,58 @@ app.post("/api/video/uploadfiles", (req, res) => {
     }
     //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
     //파일 이름도 클라이언트로 보내줘야한다.
+
+   //url이랑 fileName은 우리가 클라인트로 보내줄떄 정의해주는 이름이고, 
+   //res.req.file.path는  //path는: Multer에서 정의했다. path 오른쪽 클릭 정의로 이동 해보기
       return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename})
-  })
+  })                            //여기 url을 이용해서 클라리언트에 보내고 그걸 다시 보낸다 아래로
 });
 
+
+app.post("/api/video/thumbnail", (req, res) => {
+
+  let filePath = "";
+  let fileDuration ="";
+
+  console.log("req.body",req.body);
+  // 썸네일 생성 하고 비디오 러닝타임도 가져오기
+
+  //비디오 정보 가져오기
+  ffmpeg.ffprobe(req.body.url, function(err,metadata){
+    console.dir(metadata);
+    console.log(metadata.format.duration);
+
+    fileDuration = metadata.format.duration
+  })
+
+  // console.log("파일 듀레이션", fileDuration);
+
+
+  //썸네일 생성
+  ffmpeg(req.body.url)
+  .on('filenames', function (filenames) {
+    console.log("Will generate" + filenames.join(','))
+    console.log(filenames)
+    
+    // filePath = "../uploads/thumbnails/" + filenames[0]
+    filePath = "../uploads/thumbnails/" + filenames[0]
+    console.log("파일 path",filePath);
+  })
+  .on('end', function(){
+    console.log("스크린샷 taken")
+    return res.json({ success: true, thumbsFilePath: thumbsFilePath, fileDuration: fileDuration})
+  })
+  // .on('error', function(err){
+  //   console.log(err);
+  //   return res.json({success: false, err});
+  // })
+  .screenshots({
+    count:3,
+    folder: "../uploads/thumbnails/",
+    size:'320x240',
+    filename:'thumbnail-%b.png'
+  })
+});
 
 
 
