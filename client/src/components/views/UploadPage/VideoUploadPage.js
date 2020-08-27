@@ -108,8 +108,7 @@ function VideoUploadPage(props) {
   Axios.post('/api/video/uploadfiles', formData, config)
       .then((response)=>{
         if(response.data.success){
-
-          
+          console.log(response.data);
         } else {
           alert("업로드 실패했습니다.")
         }

@@ -28,18 +28,23 @@ const { Image } = require('./models/Image')
 const multer = require("multer")
 
 // console.log(multer);
-
+// https://www.zerocho.com/category/NodeJS/post/5950a6c4f7934c001894ea83
+// fileFilter 옵션으로 검색해보기
 let storage = multer.diskStorage({
+  //파일을 올리리면 도착지가 uploads 폴더에다가 저장됨
   destination: (req, file, cb) => {
     cb(null, "uploads/");
   },
   // 로그한번 해보기
+  //파일이름을 정해줌
   filename: (req, file, cb) => {
     cb(null, `${Date.now()}_${file.originalname}`);
   },
+  //파일필터는 mp4만 받을수 있게한다.
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
     if (ext !== ".mp4") {
+    // if(ext !== ".mp4" || ext !== ".png"){ //png랑 mp4를 받고싶은경우
       return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
     }
     cb(null, true);
@@ -47,8 +52,12 @@ let storage = multer.diskStorage({
 });
 
 // console.log("스토리지",storage);
-
-
+                        //옵션  //뒤에 스토리지는 위에서 정한 이름(멀터 옵션)
+const upload = multer({ storage: storage}).single("file")  //
+                                          //파일은 하나만(싱글)
+                                          //"file이 의미하는것은 fieldName 한번 알아보기"
+          //멀터 미들웨어
+console.log("업로드",upload);
 
 
 
@@ -270,8 +279,15 @@ app.post('/api/video/uploadfiles',(req,res)=>{
   //클라이언트에 받은 비디오를 서버에 저장한다.
   //클라이언트에서 받은 비디오를 저장하기 위해서
   // multer라는 디펜던시를 추가한다.
-
-  
+  // 이 업로드는 위에서 만들어준 멀터 미들웨어
+  upload(req, res, err => {
+    if(err) {
+      return res.json({ success : false, err })
+    }                                  
+    //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
+    //파일 이름도 클라이언트로 보내줘야한다.
+      return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename})
+  })
 })
 
 
