@@ -110,6 +110,7 @@ function VideoUploadPage(props) {
         if(response.data.success){
           console.log(response.data);
         } else {
+          console.log(response.data);
           alert("업로드 실패했습니다.")
         }
       })
@@ -148,9 +149,9 @@ function VideoUploadPage(props) {
           </DropZone>
 
           {/*썸네일*/}
-          <div>
+          {/* <div>
             <img src alt />
-          </div>
+          </div> */}
         </div>
         <br />
         <br />

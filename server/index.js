@@ -25,11 +25,15 @@ const { Video } = require('./models/Video')
 
 ///추가추가 왕추가 비디오 이미지 스키마
 const { Image } = require('./models/Image')
+
 const multer = require("multer")
 
-// console.log(multer);
-// https://www.zerocho.com/category/NodeJS/post/5950a6c4f7934c001894ea83
-// fileFilter 옵션으로 검색해보기
+
+
+
+// // console.log(multer);
+// // https://www.zerocho.com/category/NodeJS/post/5950a6c4f7934c001894ea83
+// // fileFilter 옵션으로 검색해보기
 let storage = multer.diskStorage({
   //파일을 올리리면 도착지가 uploads 폴더에다가 저장됨
   destination: (req, file, cb) => {
@@ -57,8 +61,7 @@ const upload = multer({ storage: storage}).single("file")  //
                                           //파일은 하나만(싱글)
                                           //"file이 의미하는것은 fieldName 한번 알아보기"
           //멀터 미들웨어
-console.log("업로드",upload);
-
+// console.log("업로드",upload);
 
 
 const mongoose = require("mongoose");
@@ -72,6 +75,13 @@ mongoose
   })
   .then(() => console.log("몽고DB 연결중..."))
   .catch((err) => console.log(err));
+
+
+
+
+
+
+
 
 //여기서 아이디 중복시 json을 리턴해주어서 분기처리해줘야한다.
 app.post("/api/users/register", (req, res) => {
@@ -271,24 +281,22 @@ app.post("/api/users/modify", auth, (req, res)=>{
 
 
 
-
-
 // 비디오
-app.post('/api/video/uploadfiles',(req,res)=>{
-  //req는 클라이언트에서 보내온거
-  //클라이언트에 받은 비디오를 서버에 저장한다.
-  //클라이언트에서 받은 비디오를 저장하기 위해서
-  // multer라는 디펜던시를 추가한다.
-  // 이 업로드는 위에서 만들어준 멀터 미들웨어
+app.post("/api/video/uploadfiles", (req, res) => {
+  // //req는 클라이언트에서 보내온거
+  // //클라이언트에 받은 비디오를 서버에 저장한다.
+  // //클라이언트에서 받은 비디오를 저장하기 위해서
+  // // multer라는 디펜던시를 추가한다.
+  // // 이 업로드는 위에서 만들어준 멀터 미들웨어
   upload(req, res, err => {
     if(err) {
       return res.json({ success : false, err })
-    }                                  
+    }
     //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
     //파일 이름도 클라이언트로 보내줘야한다.
       return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename})
   })
-})
+});
 
 
 
