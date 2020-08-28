@@ -43,7 +43,6 @@ app.use('/uploads', express.static('uploads'));
 let storage = multer.diskStorage({
   //파일을 올리리면 도착지가 uploads 폴더에다가 저장됨
   destination: (req, file, cb) => {
-    // cb(null, "../uploads/");
     cb(null, "uploads");
   },
   // 로그한번 해보기
@@ -130,8 +129,7 @@ app.post("/api/video/thumbnail", (req, res) => {
   .on('filenames', function (filenames) {
     console.log("2번 Will generate" + filenames.join(','))
     console.log("3번 파일네임스",filenames)
-    
-    // filePath = "../uploads/thumbnails/" + filenames[0]
+
     filePath = "http://localhost:5000/uploads/thumbnails/" + filenames[0]
     console.log("4번 파일 path",filePath);
   })
@@ -146,7 +144,6 @@ app.post("/api/video/thumbnail", (req, res) => {
   })
   .screenshots({
     count:1,
-    // folder: "../uploads/thumbnails/",
     folder: "uploads/thumbnails/",
     size:'320x240',
     filename:'thumbnail-%b.png'
