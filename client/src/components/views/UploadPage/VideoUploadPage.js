@@ -38,8 +38,13 @@ function VideoUploadPage(props) {
 
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
-  const [privacy, setPrivacy] = useState(0)
+  const [Privacy, setPrivacy] = useState(0)
   const [Categories, setCategories] = useState("Film & Animation")
+
+  // 
+  const [FilePath, setFilePath] = useState("")
+  const [Duration, setDuration] = useState("")
+  const [ThumbnailPath, setThumbnailPath] = useState("")
 
 
   const handleChangeTitle = (event) => {
@@ -108,20 +113,28 @@ function VideoUploadPage(props) {
   Axios.post('/api/video/uploadfiles', formData, config)
       .then((response)=>{
         if(response.data.success){
-          console.log(response.data);
+          console.log("비디오파일",response.data);
           //비디오를 올리고 성공하면 서버에 요청을 한번 더한다.
+          console.log("url", response.data.url);
+
           
           let variable = {  //서버에서 url이랑 fileName을 받음
             url: response.data.url,
             fileName: response.data.fileName
           }
 
+          console.log("바리아블",variable);
+
+          setFilePath(response.data.url)
+
           Axios.post("/api/video/thumbnail", variable)
+
           .then(response => {
             if(response.data.success){
-              console.log(response.data);
+              console.log("썸네일",response.data);
 
-
+              setDuration(response.data.fileDuration)
+              setThumbnailPath(response.data.url)
             } else {
               console.log(response.data);
               alert("썸네일 생성에 실패했습니다.")
@@ -147,10 +160,7 @@ function VideoUploadPage(props) {
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {/*드랍존*/}
 
-          <DropZone 
-          onDrop={onDrop}
-          multiple={false} 
-          maxSize={10000000}>
+          <DropZone onDrop={onDrop} multiple={false} maxSize={10000000}>
             {({ getRootProps, getInputProps }) => (
               <div
                 style={{
@@ -169,10 +179,14 @@ function VideoUploadPage(props) {
           </DropZone>
 
           {/*썸네일*/}
-          <div>
-            <img src alt />
-          </div>
+
+          {ThumbnailPath !== "" && (
+            <div>
+              <img src={ThumbnailPath} alt="haha" />
+            </div>
+          )}
         </div>
+
         <br />
         <br />
 

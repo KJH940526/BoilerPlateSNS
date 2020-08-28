@@ -31,6 +31,11 @@ var ffmpeg = require('fluent-ffmpeg')
 
 
 
+//use this to show the image you have in node js server to client (react js)
+//https://stackoverflow.com/questions/48914987/send-image-path-from-node-js-express-server-to-react-client
+app.use('/uploads', express.static('uploads'));
+
+
 
 // // console.log(multer);
 // // https://www.zerocho.com/category/NodeJS/post/5950a6c4f7934c001894ea83
@@ -38,8 +43,8 @@ var ffmpeg = require('fluent-ffmpeg')
 let storage = multer.diskStorage({
   //파일을 올리리면 도착지가 uploads 폴더에다가 저장됨
   destination: (req, file, cb) => {
-    // cb(null, "./uploads/");
-    cb(null, "../uploads/");
+    // cb(null, "../uploads/");
+    cb(null, "uploads");
   },
   // 로그한번 해보기
   //파일이름을 정해줌
@@ -49,8 +54,8 @@ let storage = multer.diskStorage({
   //파일필터는 mp4만 받을수 있게한다.
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    // if (ext !== ".mp4") {
-    if(ext !== ".mp4" || ext !== ".png"){ //png랑 mp4를 받고싶은경우
+    if (ext !== ".mp4") {
+    // if(ext !== ".mp4" || ext !== ".png"){ //png랑 mp4를 받고싶은경우
       return cb(res.status(400).end("only jpg, png, mp4 is allowed"), false);
     }
     cb(null, true);
@@ -79,8 +84,74 @@ mongoose
   .catch((err) => console.log(err));
 
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+// 비디오
+app.post("/api/video/uploadfiles", (req, res) => {
+  // //req는 클라이언트에서 보내온거
+  // //클라이언트에 받은 비디오를 서버에 저장한다.
+  // //클라이언트에서 받은 비디오를 저장하기 위해서
+  // // multer라는 디펜던시를 추가한다.
+  // // 이 업로드는 위에서 만들어준 멀터 미들웨어
+  upload(req, res, err => {
+    if(err) {
+      return res.json({ success : false, err })
+    }
+    //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
+    //파일 이름도 클라이언트로 보내줘야한다.
+
+   //url이랑 fileName은 우리가 클라인트로 보내줄떄 정의해주는 이름이고, 
+   //res.req.file.path는  //path는: Multer에서 정의했다. path 오른쪽 클릭 정의로 이동 해보기
+      return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename})
+  })                            //여기 url을 이용해서 클라리언트에 보내고 그걸 다시 보낸다 아래로
+});
 
 
+
+app.post("/api/video/thumbnail", (req, res) => {
+  let filePath = "";
+  let fileDuration ="";
+  console.log("1번 req.body 썸네일",req.body);
+  // 썸네일 생성 하고 비디오 러닝타임도 가져오기
+  //나중에 여기서 분기처리 한번 더 해줘야겠다
+  //비디오 정보 가져오기
+  ffmpeg.ffprobe(req.body.url, function(err,metadata){
+    // console.dir("dir",metadata);
+    // console.log("메타데이터",metadata);
+    console.log("비동기 떄문에 ?번 메타데이터 포맷",metadata.format.duration);
+    fileDuration = metadata.format.duration
+    console.log("파일듀레이션1",fileDuration);
+  })
+
+  //썸네일 생성
+  ffmpeg(req.body.url)
+  .on('filenames', function (filenames) {
+    console.log("2번 Will generate" + filenames.join(','))
+    console.log("3번 파일네임스",filenames)
+    
+    // filePath = "../uploads/thumbnails/" + filenames[0]
+    filePath = "http://localhost:5000/uploads/thumbnails/" + filenames[0]
+    console.log("4번 파일 path",filePath);
+  })
+  .on('end', function(){
+    console.log("6번 스크린샷 taken")
+    console.log("end fileDuration", fileDuration);  //보낸는 이름   //정보가 들어있음
+    return res.json({ success: true, url: filePath, fileDuration: fileDuration})
+  })
+  .on('error', function(err){
+    console.log("에러",err);
+    return res.json({success: false, err});
+  })
+  .screenshots({
+    count:1,
+    // folder: "../uploads/thumbnails/",
+    folder: "uploads/thumbnails/",
+    size:'320x240',
+    filename:'thumbnail-%b.png'
+  })
+});
 
 
 
@@ -279,77 +350,6 @@ app.post("/api/users/modify", auth, (req, res)=>{
   })
 })
 
-
-
-
-
-// 비디오
-app.post("/api/video/uploadfiles", (req, res) => {
-  // //req는 클라이언트에서 보내온거
-  // //클라이언트에 받은 비디오를 서버에 저장한다.
-  // //클라이언트에서 받은 비디오를 저장하기 위해서
-  // // multer라는 디펜던시를 추가한다.
-  // // 이 업로드는 위에서 만들어준 멀터 미들웨어
-  upload(req, res, err => {
-    if(err) {
-      return res.json({ success : false, err })
-    }
-    //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
-    //파일 이름도 클라이언트로 보내줘야한다.
-
-   //url이랑 fileName은 우리가 클라인트로 보내줄떄 정의해주는 이름이고, 
-   //res.req.file.path는  //path는: Multer에서 정의했다. path 오른쪽 클릭 정의로 이동 해보기
-      return res.json({ success: true, url: res.req.file.path, fileName: res.req.file.filename})
-  })                            //여기 url을 이용해서 클라리언트에 보내고 그걸 다시 보낸다 아래로
-});
-
-
-app.post("/api/video/thumbnail", (req, res) => {
-
-  let filePath = "";
-  let fileDuration ="";
-
-  console.log("1번 req.body",req.body);
-  // 썸네일 생성 하고 비디오 러닝타임도 가져오기
-
-  //비디오 정보 가져오기
-  ffmpeg.ffprobe(req.body.url, function(err,metadata){
-    // console.dir("dir",metadata);
-    // console.log("메타데이터",metadata);
-    console.log("비동기 떄문에 ?번 메타데이터 포맷",metadata.format.duration);
-
-    fileDuration = metadata.format.duration
-
-    console.log("파일듀레이션1",fileDuration);
-  })
-
-
-  //썸네일 생성
-  ffmpeg(req.body.url)
-  .on('filenames', function (filenames) {
-    console.log("2번 Will generate" + filenames.join(','))
-    console.log("3번 파일네임스",filenames)
-    
-    // filePath = "../uploads/thumbnails/" + filenames[0]
-    filePath = "../uploads/thumbnails/" + filenames[0]
-    console.log("4번 파일 path",filePath);
-  })
-  .on('end', function(){
-    console.log("6번 스크린샷 taken")
-    console.log("end fileDuration", fileDuration);  //보낸는 이름   //정보가 들어있음
-    return res.json({ success: true, url: filePath, fileDuration: fileDuration})
-  })
-  .on('error', function(err){
-    console.log("에러",err);
-    return res.json({success: false, err});
-  })
-  .screenshots({
-    count:1,
-    folder: "../uploads/thumbnails/",
-    size:'320x240',
-    filename:'thumbnail-%b.png'
-  })
-});
 
 
 
