@@ -32,14 +32,15 @@ const Catogory = [
 
 
 function VideoUploadPage(props) {
-  // const user = useSelector(state => state.user);
-  // console.log("유저유저유저유저",user)
-  // 주석 잡고 풀어보기
+
+  const user = useSelector(state => state.user);
+  //redux스토어에서 state 가져온다. 그리고 state의 user를 가져온다
+  //그러면 리덕스 user의 모든 정보들이 const user에 다 담겨진다.
 
   const [title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [Privacy, setPrivacy] = useState(0)
-  const [Categories, setCategories] = useState("Film & Animation")
+  const [Category, setCategory] = useState("Film & Animation")
 
   // 
   const [FilePath, setFilePath] = useState("")
@@ -63,7 +64,7 @@ function VideoUploadPage(props) {
   };
 
   const handleChangeTwo = (event) => {
-    setCategories(event.currentTarget.value);
+    setCategory(event.currentTarget.value);
   };
   
                   //파라미터(변수)로 files를 받는다.
@@ -150,13 +151,52 @@ function VideoUploadPage(props) {
 
   }
 
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    // console.log(e);
+
+
+    
+
+    const variable = {
+      //writer의 정보는 리덕스 스토어에서 가져온다
+      //리덕스 스테이트에는 이미 유저데이터를 가지고 있다
+      //유저 아이디를 리덕스로 가져오기 위해서 
+      //redux 훅을 사용해야하는데 useSelector를 react-redux에서 import한다
+      
+      //user는 위에서 선언한 user이고 그 안에 있는 userData를 쓴다
+      writer: user.userData._id, //이러면 지금 리덕스 스토에어서 지금 쓰고 있는 사람의 아이디가 담겨진다.
+      title: title, //setState 값이 들어있음
+      description: Description , 
+      privacy: Privacy,
+      filePath: FilePath,
+      category: Category,
+      duration: Duration,
+      thumbnail: ThumbnailPath,
+    }
+
+    Axios.post("/api/video/uploadVideo", variable) 
+      .then(response => {
+        if(response.data.success){
+
+        } else {
+          alert('비디어 업로드에 실패 했습니다.')
+        }
+      })
+  }
+
+
+
+
+
   return (
     <div style={{ maxWidth: "700px", margin: "2rem auth" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
         <Title level={2}>Upload Video</Title>
       </div>
 
-      <Form onSubmit>
+      <Form onSubmit={onSubmit}>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           {/*드랍존*/}
 
@@ -223,7 +263,7 @@ function VideoUploadPage(props) {
         <br />
         <br />
 
-        <Button type="primary" size="large" onClick>
+        <Button type="primary" size="large" onClick={onSubmit}>
           제출
         </Button>
       </Form>

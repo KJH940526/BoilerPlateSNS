@@ -20,7 +20,7 @@ const jwt = require("jsonwebtoken");
 const { auth } = require("./middleware/auth");
 const { User } = require("./models/User");
 
-// 비디오
+// 비디오 //비디오를 저장하기 위한 비디오 모델
 const { Video } = require('./models/Video')
 
 ///추가추가 왕추가 비디오 이미지 스키마
@@ -87,6 +87,15 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+// 비디오정보를 몽고디비에 저장한다.
+app.post("/api/video/uploadVideo", (req, res) => {
+    //비디오 모델을 인스턴스로 만든다(new Video) 
+    new Video(req.body)
+
+});
+
+
+
 // 비디오
 app.post("/api/video/uploadfiles", (req, res) => {
   // //req는 클라이언트에서 보내온거
@@ -96,7 +105,7 @@ app.post("/api/video/uploadfiles", (req, res) => {
   // // 이 업로드는 위에서 만들어준 멀터 미들웨어
   upload(req, res, err => {
     if(err) {
-      return res.json({ success : false, err })
+      return res.json({ success : false, err,})
     }
     //url은 파일을 업로드하면 uploads 폴더로 들어가는데 그 경로를 클라이언트에 보내줌
     //파일 이름도 클라이언트로 보내줘야한다.
@@ -130,6 +139,8 @@ app.post("/api/video/thumbnail", (req, res) => {
     console.log("2번 Will generate" + filenames.join(','))
     console.log("3번 파일네임스",filenames)
 
+
+                                    //이유는 몰라도 서버 안에 있는 썸네일을 가져옴
     filePath = "http://localhost:5000/uploads/thumbnails/" + filenames[0]
     console.log("4번 파일 path",filePath);
   })
@@ -140,7 +151,7 @@ app.post("/api/video/thumbnail", (req, res) => {
   })
   .on('error', function(err){
     console.log("에러",err);
-    return res.json({success: false, err});
+    return res.json({success: false, err,});
   })
   .screenshots({
     count:1,
